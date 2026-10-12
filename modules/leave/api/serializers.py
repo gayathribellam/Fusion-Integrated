@@ -1,5 +1,7 @@
 from rest_framework import serializers
-from .models import LeaveType, LeaveRequest
+
+from .models import LeaveRequest, LeaveType
+
 
 class LeaveTypeSerializer(serializers.ModelSerializer):
     class Meta:
