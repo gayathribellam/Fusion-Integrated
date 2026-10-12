@@ -1,28 +1,32 @@
+
+MODULE_CODE = "elm"
+MODULE_LABEL = "Employee Leave Management"
+
 MODULE = {
-    "code": "elm",
-    "label": "Employee Leave Management",
+    "code": MODULE_CODE,
+    "label": MODULE_LABEL,
     "icon": "FaCalendar",
-    "base_path": "/elm",
-    "nav_section": "Employee Leave Management",
+    "base_path": f"/{MODULE_CODE}",
+    "nav_section": MODULE_LABEL,
     "sort_order": 11,
     "status": "active",
 }
 
 NAV_ITEMS = [
     {
-        "code": "elm.leave_applications",
+        "code": f"{MODULE_CODE}.leave_applications",
         "label": "Leave Applications",
         "icon": "FaCalendarAlt",
-        "to": "/elm/applications",
-        "required_permission": "elm.application.view",
+        "to": f"/{MODULE_CODE}/applications",
+        "required_permission": f"{MODULE_CODE}.application.view",
         "sort_order": 10,
     },
 ]
 
 PERMISSIONS = [
-    ("elm.application.view", "View leave applications"),
-    ("elm.application.create", "Create leave applications"),
-    ("elm.application.manage", "Manage leave applications"),
+    (f"{MODULE_CODE}.application.view", "View leave applications"),
+    (f"{MODULE_CODE}.application.create", "Create leave applications"),
+    (f"{MODULE_CODE}.application.manage", "Manage leave applications"),
 ]
 
 SYSTEM_PERMISSIONS = []
