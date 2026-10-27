@@ -1,6 +1,7 @@
+from django.db.models import Q
 from rest_framework import serializers
 
-from .models import LeaveRequest, LeaveType
+from ..models import LeaveRequest, LeaveType
 
 
 class LeaveTypeSerializer(serializers.ModelSerializer):
@@ -34,5 +35,29 @@ class LeaveRequestSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 {"end_date": "End date cannot be before start date."}
             )
+
+        request = self.context.get("request")
+        user = getattr(request, "user", None)
+        if (
+            user is not None
+            and getattr(user, "is_authenticated", False)
+            and start_date
+            and end_date
+        ):
+            overlaps = LeaveRequest.objects.filter(
+                user=user,
+                status__in=("pending", "approved"),
+                start_date__lte=end_date,
+                end_date__gte=start_date,
+            )
+            if self.instance is not None:
+                overlaps = overlaps.exclude(pk=self.instance.pk)
+            if overlaps.exists():
+                raise serializers.ValidationError({
+                    "start_date": (
+                        "These dates overlap an existing pending or approved "
+                        "leave request."
+                    )
+                })
 
         return data
